@@ -2,6 +2,33 @@ import tkinter as tk
 from tkinter import Tk
 from tkinter import filedialog
 
+
+root = Tk()
+root.withdraw()
+
+def CargarInstrucciones():
+    root.attributes("-topmost", True)
+    #Abre Ventana para Buscar el archivo
+    archivo = filedialog.askopenfilename()
+    
+    
+    if archivo:
+        print("Archivo seleccionado:", archivo)
+        print("")
+        archivo_texto = open(archivo, "r", encoding = "utf8")
+        texto = archivo_texto.read()
+        archivo_texto.close()
+        
+        global Data
+        Data = texto
+        print(Data)
+        print("")
+        print("Carga Exitosa")
+    else:
+        print("")
+        print("No se seleccionó ningún archivo.")
+
+
 def Menu(): 
     while True:
         print("")
@@ -23,7 +50,7 @@ def Menu():
         if opcionMenu =="1":
            print("---->Cargar Inventario Inicial")
            print("")
-           CargarInventario()
+           CargarInstrucciones()
            
 
         elif opcionMenu =="2":
@@ -46,31 +73,9 @@ def Menu():
                     input("No has pulsado ninguna opción correcta...\n Pulsa una tecla para continuar")
 
 
-root = Tk()
-root.withdraw()
-def CargarInventario():
-    root.attributes("-topmost", True)
-    #Abre Ventana para Buscar el archivo
-    archivo = filedialog.askopenfilename()
-    
-    
-    if archivo:
-        print("Archivo seleccionado:", archivo)
-        print("")
-        archivo_texto = open(archivo, "r", encoding = "utf8")
-        texto = archivo_texto.read()
-        archivo_texto.close()
-        
-        global Data
-        Data = texto
-        print(Data)
-        print("Carga Exitosa")
-    else:
-        print("")
-        print("No se seleccionó ningún archivo.")
 
-def CargarInstrucciones():
-     CargarInventario()
+
+
 
 Menu()
 
