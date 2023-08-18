@@ -1,4 +1,5 @@
 import tkinter as tk
+import re
 from tkinter import Tk
 from tkinter import filedialog
 
@@ -15,20 +16,50 @@ def CargarInstrucciones():
     if archivo:
         print("Archivo seleccionado:", archivo)
         print("")
-        archivo_texto = open(archivo, "r", encoding = "utf8")
-        texto = archivo_texto.read()
-        archivo_texto.close()
+        archivo_texto = open(archivo, "r+", encoding = "utf8")
+        array_chars = []
+        for line in archivo_texto.readlines():
+            
+            for char in line.replace(" ",";").split(";"):
+                array_chars.append(char) 
+        print(array_chars)
         
         global Data
-        Data = texto
-        print(Data)
+        Data = archivo_texto
+        #print(Data)
         print("")
         print("Carga Exitosa")
+        print("")
+        
     else:
         print("")
         print("No se seleccionó ningún archivo.")
 
 
+"""
+###def load_file():
+    try:
+        Tk().withdraw()
+        filename = filedialog.askopenfilename()
+        input_file = open(filename, 'r+', encoding='utf-8')
+    except:
+        print('Error al cargar el archivo')
+    else:
+        array_chars = []
+
+        for line in input_file.readlines():
+            for char in line.strip():
+                array_chars.append(char)
+
+        print(array_chars)###
+        """
+
+#def RecorrerArchivo():
+    #nombre_archivo = Data
+    #for linea in Data.readlines():
+            # Procesa cada línea aquí
+            #linea = linea.strip()  # Elimina los caracteres de nueva línea al final de la línea
+            #print(linea)  # Por ejemplo, puedes imprimir la línea o realizar otra operación
 def Menu(): 
     while True:
         print("")
@@ -76,7 +107,7 @@ def Menu():
 
 
 
-
+#RecorrerArchivo()
 Menu()
 
     
