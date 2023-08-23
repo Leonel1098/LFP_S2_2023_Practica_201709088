@@ -1,0 +1,4 @@
+Informe de Inventario: 
+Producto         Cantidad         Precio Unitario          Valor Toral          Ubicación 
+agregar_stockManzanas50BodegaA
+vender_productoPeras20BodegaB

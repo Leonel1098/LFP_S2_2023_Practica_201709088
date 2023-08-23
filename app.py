@@ -1,7 +1,9 @@
-import tkinter as tk
-import re
 from tkinter import Tk
 from tkinter import filedialog
+from Producto_Data import Producto_Data
+
+manejar_productos = Producto_Data()
+
 
 
 root = Tk()
@@ -23,9 +25,9 @@ def CargarInstrucciones():
             for char in line.replace(" ",";").split(";"):
                 array_chars.append(char) 
         print(array_chars)
-        
+
         global Data
-        Data = archivo_texto
+        Data = array_chars
         #print(Data)
         print("")
         print("Carga Exitosa")
@@ -35,31 +37,27 @@ def CargarInstrucciones():
         print("")
         print("No se seleccionó ningún archivo.")
 
+def NuevoProducto():
+        for productos in Data:
+            instruccion = productos[0]
+            nombre = productos[1]
+            cantidad = productos[2]
+            precio_unitario = productos[3]
+            ubicacion = productos[4]
+            manejar_productos.Nuevo_Producto(instruccion,nombre,cantidad,precio_unitario,ubicacion)
+    
+def VisualizarProducto():
+    manejar_productos.Ver_Productos()
 
-"""
-###def load_file():
-    try:
-        Tk().withdraw()
-        filename = filedialog.askopenfilename()
-        input_file = open(filename, 'r+', encoding='utf-8')
-    except:
-        print('Error al cargar el archivo')
-    else:
-        array_chars = []
+def Abrir_Txt():
+    with open("Resultado.txt","w", encoding= "utf8") as archivo_txt:
+        archivo_txt.write("Informe de Inventario: \n"
+                        "Producto       " "  Cantidad         "  
+                        "Precio Unitario          "  "Valor Toral          "  "Ubicación \n")
+        for item in Data:
+                archivo_txt.write(str(item))
+    print("Archivo Creado Correctamente")
 
-        for line in input_file.readlines():
-            for char in line.strip():
-                array_chars.append(char)
-
-        print(array_chars)###
-        """
-
-#def RecorrerArchivo():
-    #nombre_archivo = Data
-    #for linea in Data.readlines():
-            # Procesa cada línea aquí
-            #linea = linea.strip()  # Elimina los caracteres de nueva línea al final de la línea
-            #print(linea)  # Por ejemplo, puedes imprimir la línea o realizar otra operación
 def Menu(): 
     while True:
         print("")
@@ -82,6 +80,8 @@ def Menu():
            print("---->Cargar Inventario Inicial")
            print("")
            CargarInstrucciones()
+           print("")
+          
            
 
         elif opcionMenu =="2":
@@ -90,18 +90,21 @@ def Menu():
             print("")
             
             
+            
         elif opcionMenu =="3":
             print("----->Crear Informe de Inventario")
-           
+            print("*********************")
+            Abrir_Txt()
             print("")
             
         elif opcionMenu =="4":
-            print("Adiós Goku ")
+            print("")
+            print(" Adiós :)")
             break
 
         else:
-                    print ("")
-                    input("No has pulsado ninguna opción correcta...\n Pulsa una tecla para continuar")
+                print ("")
+                input("No has pulsado ninguna opción correcta...\n Pulsa una tecla para continuar")
 
 
 
@@ -115,3 +118,28 @@ Menu()
     
     
   
+"""
+###def load_file():
+    try:
+        Tk().withdraw()
+        filename = filedialog.askopenfilename()
+        input_file = open(filename, 'r+', encoding='utf-8')
+    except:
+        print('Error al cargar el archivo')
+    else:
+        array_chars = []
+
+        for line in input_file.readlines():
+            for char in line.strip():
+                array_chars.append(char)
+
+        print(array_chars)###
+        
+
+#def RecorrerArchivo():
+    #nombre_archivo = Data
+    #for linea in Data.readlines():
+            # Procesa cada línea aquí
+            #linea = linea.strip()  # Elimina los caracteres de nueva línea al final de la línea
+            #print(linea)  # Por ejemplo, puedes imprimir la línea o realizar otra operación
+            """
