@@ -18,45 +18,114 @@ def CargarInstrucciones():
     if archivo:
         print("Archivo seleccionado:", archivo)
         print("")
-        archivo_texto = open(archivo, "r+", encoding = "utf8")
+        global array_chars
         array_chars = []
-        for line in archivo_texto.readlines():
-            
-            for char in line.replace(" ",";").split(";"):
-                array_chars.append(char) 
-        print(array_chars)
+        archivo_texto = open(archivo, "r+", encoding = "utf8")
+        
 
-        global Data
-        Data = array_chars
-        #print(Data)
-        print("")
-        print("Carga Exitosa")
-        print("")
+        for line in archivo_texto.readlines():
+            instruccion, datos = line.strip().split(' ', 1)
+            if instruccion == 'crear_producto':
+                nombre, cantidad, precio_unitario, ubicacion = datos.split(';')
+                producto = {
+                    'nombre': nombre,
+                    'cantidad': float(cantidad),
+                    'precio unitario': float(precio_unitario),
+                    'ubicacion': ubicacion}
+                array_chars.append(producto)
+
+        for producto in array_chars:
+            print(f"Producto:  {producto['nombre']}")
+            print(f"Cantidad:  {producto['cantidad']}")
+            print(f"Precio Unitario : {producto['precio unitario']}")
+            print(f"Ubicacion: {producto['ubicacion']}\n")
+       
+       
         
     else:
         print("")
         print("No se seleccionó ningún archivo.")
 
-def NuevoProducto():
-        for productos in Data:
-            instruccion = productos[0]
-            nombre = productos[1]
-            cantidad = productos[2]
-            precio_unitario = productos[3]
-            ubicacion = productos[4]
-            manejar_productos.Nuevo_Producto(instruccion,nombre,cantidad,precio_unitario,ubicacion)
+
+def CargarMovimientos():
+    global array_chars
+    array_chars = []
+    root.attributes("-topmost", True)
+    #Abre Ventana para Buscar el archivo
     
-def VisualizarProducto():
-    manejar_productos.Ver_Productos()
+    errores = False
+
+    try:
+        archivo = filedialog.askopenfilename()
+        print("Archivo seleccionado:", archivo)
+        print("")
+        archivo_texto = open(archivo, "r+", encoding = "utf8")
+        lineas = archivo_texto.readlines()
+
+        #global array_chars
+        #array_chars = []
+
+        for line in lineas:
+            instruccion, datos = line.strip().split(' ', 1)
+            if instruccion == 'agregar_stock':
+                nombre, cantidad, ubicacion = datos.split(';')
+                producto_encontrado = False
+                for producto in array_chars:
+                    if producto['nombre'] == nombre and producto['ubicacion'] == ubicacion:
+                        producto_encontrado = True
+                        producto['cantidad'] += float(cantidad)
+                        break
+
+                if not producto_encontrado:
+                    print("")
+                    print(f"Error: El producto '{nombre}' no se encuentra en la ubicación '{ubicacion}'")
+                    errores = True
+
+            elif instruccion == 'vender_producto':
+                nombre, cantidad, ubicacion = datos.split(';')
+                producto_encontrado = False
+                for producto in array_chars:
+                    if producto['nombre'] == nombre and producto['ubicacion'] == ubicacion:
+                        producto_encontrado = True
+                        if producto['cantidad'] >= float(cantidad):
+                              producto['cantidad'] -= float(cantidad)
+                        else:
+                            print("")
+                            print(f"Error: No hay suficiente cantidad del producto '{nombre}' en la ubicación '{ubicacion}'")
+                            errores = True
+                        break
+                
+                if not producto_encontrado:
+                    print("")
+                    print(f"Error: El producto '{nombre}' no se encuentra en la ubicación '{ubicacion}'")
+                    errores = True
+                    
+        if not errores:
+            print("\nArchivo de Movimientos Cargado Correctamente")
+            
+    except FileNotFoundError:
+        print("El archivo especificado no existe")
+    except Exception as e:
+        print("Ocurrió un error al cargar las instrucciones:", str(e))
+     
+
 
 def Abrir_Txt():
     with open("Resultado.txt","w", encoding= "utf8") as archivo_txt:
         archivo_txt.write("Informe de Inventario: \n"
                         "Producto       " "  Cantidad         "  
                         "Precio Unitario          "  "Valor Toral          "  "Ubicación \n")
-        for item in Data:
-                archivo_txt.write(str(item))
-    print("Archivo Creado Correctamente")
+        
+        for producto in array_chars:
+            cantidad = producto['cantidad']
+            precio_unitario = producto['precio unitario']
+            valor_total = cantidad * precio_unitario
+            ubicacion = producto['ubicacion']
+            
+            archivo_data = "{:<15} {:<10} ${:<14.2f} ${:<9.2f} {}".format(producto['nombre'], cantidad, precio_unitario, valor_total, ubicacion)
+            archivo_txt.write(archivo_data + "\n")
+
+        print("Archivo Resultado.txt Creado Correctamente")
 
 def Menu(): 
     while True:
@@ -86,14 +155,15 @@ def Menu():
 
         elif opcionMenu =="2":
             print("---->Cargar Instrucciones de Movimientos")
-            CargarInstrucciones()
+            print("")
+            CargarMovimientos()
             print("")
             
             
             
         elif opcionMenu =="3":
             print("----->Crear Informe de Inventario")
-            print("*********************")
+            print("")
             Abrir_Txt()
             print("")
             
@@ -113,13 +183,30 @@ def Menu():
 #RecorrerArchivo()
 Menu()
 
-    
+"""""   
+        global Data
+        Data = array_chars
+        #print(Data)
+        print("")
+        print("Carga Exitosa")
+        print("")"""
    
+"""""   
+def NuevoProducto():
+        for productos in Data:
+            instruccion = productos[0]
+            nombre = productos[1]
+            cantidad = productos[2]
+            precio_unitario = productos[3]
+            ubicacion = productos[4]
+            manejar_productos.Nuevo_Producto(instruccion,nombre,cantidad,precio_unitario,ubicacion)
     
-    
+def VisualizarProducto():
+    manejar_productos.Ver_Productos()
   
 """
 ###def load_file():
+"""""
     try:
         Tk().withdraw()
         filename = filedialog.askopenfilename()
@@ -132,6 +219,7 @@ Menu()
         for line in input_file.readlines():
             for char in line.strip():
                 array_chars.append(char)
+                
 
         print(array_chars)###
         
